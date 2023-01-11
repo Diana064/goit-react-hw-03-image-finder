@@ -29,11 +29,11 @@ export class Modal extends React.Component {
   };
 
   render() {
-    const { largePictureLink, tags } = this.props;
+    const { largeImageURL, tags } = this.props;
     return createPortal(
       <div className={css.Overlay} onClick={this.onClick}>
         <div className={css.Modal}>
-          <img src={largePictureLink} alt={tags} />
+          <img src={largeImageURL} alt={tags} />
         </div>
       </div>,
       modalRoot
