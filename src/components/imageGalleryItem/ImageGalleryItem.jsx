@@ -11,6 +11,7 @@ export class ImageGalleryItem extends React.Component {
     const { largeImageURL } = this.props;
     this.setState({ largeImageURL });
     this.toggleModal();
+    console.log(this.state);
   };
 
   toggleModal = () => {

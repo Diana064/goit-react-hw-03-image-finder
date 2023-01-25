@@ -1,12 +1,11 @@
 import React from 'react';
 import { ImageGalleryItem } from '../imageGalleryItem/ImageGalleryItem';
-
 import { Button } from 'components/button/Button';
-
 import css from './ImageGallery.module.css';
 
 const API_KEY = '31465649-f1ff204e289e0f72e30576924';
 const BASE_URL = 'https://pixabay.com/api/?';
+
 export class ImageGallery extends React.Component {
   state = {
     page: 1,
@@ -21,16 +20,16 @@ export class ImageGallery extends React.Component {
 
     if (pictureName !== prevProps.pictureName) {
       this.setState({ page: 1, status: 'pending', images: [] });
-      this.getPictures(page, pictureName);
+      this.getImages(page, pictureName);
       return;
     }
     if (page > prevState.page) {
-      this.getPictures(page, pictureName);
+      this.getImages(page, pictureName);
       return;
     }
   }
 
-  getPictures = (page, pictureName) => {
+  getImages = (page, pictureName) => {
     fetch(
       `${BASE_URL}q=${pictureName}&page=${page}&key=${API_KEY}&image_type=photo&orientation=horizontal&per_page=12`
     )
@@ -44,11 +43,11 @@ export class ImageGallery extends React.Component {
       })
       .then(({ hits }) => {
         const imagesList = hits.map(
-          ({ id, webformatURL, largePictureLink, tags }) => {
+          ({ id, webformatURL, largeImageURL, tags }) => {
             return {
               id,
               webformatURL,
-              largePictureLink,
+              largeImageURL,
               tags,
             };
           }
@@ -83,12 +82,12 @@ export class ImageGallery extends React.Component {
       return (
         <>
           <ul className={css.ImageGallery}>
-            {images.map(({ id, webformatURL, largePictureLink, tags }) => {
+            {images.map(({ id, webformatURL, largeImageURL, tags }) => {
               return (
                 <ImageGalleryItem
                   key={id}
                   webformatURL={webformatURL}
-                  largePictureLink={largePictureLink}
+                  largeImageURL={largeImageURL}
                   tags={tags}
                 />
               );
