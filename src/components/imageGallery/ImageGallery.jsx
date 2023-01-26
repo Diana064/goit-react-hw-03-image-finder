@@ -2,6 +2,7 @@ import React from 'react';
 import { ImageGalleryItem } from '../imageGalleryItem/ImageGalleryItem';
 import { Button } from 'components/button/Button';
 import css from './ImageGallery.module.css';
+import { Loader } from 'components/loader/Loader';
 
 const API_KEY = '31465649-f1ff204e289e0f72e30576924';
 const BASE_URL = 'https://pixabay.com/api/?';
@@ -73,7 +74,7 @@ export class ImageGallery extends React.Component {
     const { images, status, error } = this.state;
     if (status === 'pending') {
       //   return <Loader />;
-      return <div>Loading</div>;
+      return <Loader />;
     }
     if (status === 'rejected') {
       return <div>{error.message}</div>;
