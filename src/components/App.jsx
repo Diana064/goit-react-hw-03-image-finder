@@ -21,6 +21,7 @@ export class App extends Component {
     largeImageURL: '',
     error: null,
     showButton: true,
+    totalHits: 0,
   };
 
   componentDidUpdate(prevProps, prevState) {
@@ -48,7 +49,7 @@ export class App extends Component {
           new Error(`Something wrong with this request ${pictureName}`)
         );
       })
-      .then(({ hits }) => {
+      .then(({ hits, totalHits }) => {
         const imagesList = hits.map(
           ({ id, webformatURL, largeImageURL, tags }) => {
             return {
@@ -59,24 +60,29 @@ export class App extends Component {
             };
           }
         );
+
+        this.setState({
+          totalHits: totalHits,
+        });
+
+        console.log(this.state.totalHits);
         return imagesList;
       })
       .then(imagesList => {
         this.setState(({ images }) => ({
           images: [...images, ...imagesList],
           status: 'resolved',
-          // showButton: this.state.page < Math.ceil(totalHits / 12),
         }));
       })
       .catch(error => this.setState({ error, status: 'rejected' }));
-    console.log(this.state.showButton);
+
+    console.log(this.state.page < Math.ceil(this.state.totalHits / 12));
   };
 
   onSubmitFormHandler = pictureName => {
     if (pictureName) {
       this.setState({ pictureName });
     }
-    console.log(this.state.showButton);
   };
 
   loadMore = () => {
@@ -98,8 +104,10 @@ export class App extends Component {
         <div className={css.App}>
           <Searchbar onSubmit={this.onSubmitFormHandler} />
           <ImageGallery images={images} />
-
-          <Button onClick={this.loadMore}>Load More</Button>
+          {this.state.page < Math.ceil(this.state.totalHits / 12) && (
+            <Button onClick={this.loadMore}>Load More</Button>
+          )}
+          {/* <Button onClick={this.loadMore}>Load More</Button> */}
         </div>
       );
     }
