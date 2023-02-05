@@ -20,7 +20,7 @@ export class App extends Component {
     showModal: false,
     largeImageURL: '',
     error: null,
-    showButton: true,
+    showButton: false,
     totalHits: 0,
   };
 
@@ -60,23 +60,22 @@ export class App extends Component {
             };
           }
         );
-
-        this.setState({
-          totalHits: totalHits,
-        });
-
-        console.log(this.state.totalHits);
-        return imagesList;
-      })
-      .then(imagesList => {
         this.setState(({ images }) => ({
           images: [...images, ...imagesList],
           status: 'resolved',
+          totalHits,
+          showButton: this.state.page < Math.ceil(totalHits / 12),
         }));
       })
+      // .then(imagesList => {
+      //   this.setState(({ images }) => ({
+      //     images: [...images, ...imagesList],
+      //     status: 'resolved',
+      //   }));
+      // })
       .catch(error => this.setState({ error, status: 'rejected' }));
 
-    console.log(this.state.page < Math.ceil(this.state.totalHits / 12));
+    console.log(this.state.showButton);
   };
 
   onSubmitFormHandler = pictureName => {
@@ -104,10 +103,9 @@ export class App extends Component {
         <div className={css.App}>
           <Searchbar onSubmit={this.onSubmitFormHandler} />
           <ImageGallery images={images} />
-          {this.state.page < Math.ceil(this.state.totalHits / 12) && (
+          {this.state.showButton && (
             <Button onClick={this.loadMore}>Load More</Button>
           )}
-          {/* <Button onClick={this.loadMore}>Load More</Button> */}
         </div>
       );
     }
