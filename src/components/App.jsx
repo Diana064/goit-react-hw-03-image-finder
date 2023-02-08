@@ -7,9 +7,9 @@ import 'react-toastify/dist/ReactToastify.css';
 import ImageGallery from './imageGallery/ImageGallery';
 import css from './App.module.css';
 import { Button } from './button/Button';
-
-const API_KEY = '31465649-f1ff204e289e0f72e30576924';
-const BASE_URL = 'https://pixabay.com/api/?';
+import pictureApi from './services/PictureApi';
+// const API_KEY = '31465649-f1ff204e289e0f72e30576924';
+// const BASE_URL = 'https://pixabay.com/api/?';
 
 export class App extends Component {
   state = {
@@ -27,28 +27,15 @@ export class App extends Component {
   componentDidUpdate(prevProps, prevState) {
     const { page, pictureName } = this.state;
 
-    if (pictureName !== prevState.pictureName) {
+    if (pictureName !== prevState.pictureName && page > prevState.page) {
       this.setState({ page: 1, status: 'pending', images: [] });
-      this.getImages(page, pictureName);
-      return;
-    }
-    if (page > prevState.page) {
       this.getImages(page, pictureName);
       return;
     }
   }
   getImages = (page, pictureName) => {
-    fetch(
-      `${BASE_URL}q=${pictureName}&page=${page}&key=${API_KEY}&image_type=photo&orientation=horizontal&per_page=12`
-    )
-      .then(response => {
-        if (response.ok) {
-          return response.json();
-        }
-        return Promise.reject(
-          new Error(`Something wrong with this request ${pictureName}`)
-        );
-      })
+    pictureApi
+      .fetchPicture(pictureName, page)
       .then(({ hits, totalHits }) => {
         const imagesList = hits.map(
           ({ id, webformatURL, largeImageURL, tags }) => {
@@ -67,15 +54,8 @@ export class App extends Component {
           showButton: this.state.page < Math.ceil(totalHits / 12),
         }));
       })
-      // .then(imagesList => {
-      //   this.setState(({ images }) => ({
-      //     images: [...images, ...imagesList],
-      //     status: 'resolved',
-      //   }));
-      // })
-      .catch(error => this.setState({ error, status: 'rejected' }));
 
-    console.log(this.state.showButton);
+      .catch(error => this.setState({ error, status: 'rejected' }));
   };
 
   onSubmitFormHandler = pictureName => {
