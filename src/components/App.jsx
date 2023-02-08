@@ -8,8 +8,6 @@ import ImageGallery from './imageGallery/ImageGallery';
 import css from './App.module.css';
 import { Button } from './button/Button';
 import pictureApi from './services/PictureApi';
-// const API_KEY = '31465649-f1ff204e289e0f72e30576924';
-// const BASE_URL = 'https://pixabay.com/api/?';
 
 export class App extends Component {
   state = {
@@ -28,7 +26,7 @@ export class App extends Component {
     const { page, pictureName } = this.state;
 
     if (pictureName !== prevState.pictureName || page > prevState.page) {
-      this.setState({ page: 1, status: 'pending', images: [] });
+      this.setState({ status: 'pending' });
       this.getImages(page, pictureName);
       return;
     }
@@ -54,7 +52,6 @@ export class App extends Component {
           showButton: this.state.page < Math.ceil(totalHits / 12),
         }));
       })
-
       .catch(error => this.setState({ error, status: 'rejected' }));
   };
 
@@ -76,25 +73,17 @@ export class App extends Component {
       return <Loader />;
     }
     if (status === 'rejected') {
-      return <div>{error.message}</div>;
-    }
-    if (status === 'resolved') {
-      return (
-        <div className={css.App}>
-          <Searchbar onSubmit={this.onSubmitFormHandler} />
-          <ImageGallery images={images} />
-          {this.state.showButton && (
-            <Button onClick={this.loadMore}>Load More</Button>
-          )}
-        </div>
-      );
+      return <div>Oh, something went wrong</div>;
     }
 
     return (
       <div className={css.App}>
         <Searchbar onSubmit={this.onSubmitFormHandler} />
+        <ImageGallery images={images} />
         <ToastContainer />
-        {/* {showButton && <Button onClick={this.loadMore}>Load More</Button>} */}
+        {this.state.showButton && (
+          <Button onClick={this.loadMore}>Load More</Button>
+        )}
       </div>
     );
   }
