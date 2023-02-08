@@ -68,24 +68,43 @@ export class App extends Component {
     }));
   };
 
+  //   render() {
+  //     const { images, status } = this.state;
+  //     if (status === 'pending') {
+  //       return <Loader />;
+  //     }
+  //     if (status === 'rejected') {
+  //       return <div>Oh, something went wrong</div>;
+  //     }
+
+  //     return (
+  //       <div className={css.App}>
+  //         <Searchbar onSubmit={this.onSubmitFormHandler} />
+  //         <ImageGallery images={images} />
+  //         <ToastContainer />
+  //         {this.state.showButton && (
+  //           <Button onClick={this.loadMore}>Load More</Button>
+  //         )}
+  //       </div>
+  //     );
+  //   }
+  // }
   render() {
     const { images, status } = this.state;
-    if (status === 'pending') {
-      return <Loader />;
-    }
-    if (status === 'rejected') {
-      return <div>Oh, something went wrong</div>;
-    }
 
     return (
-      <div className={css.App}>
-        <Searchbar onSubmit={this.onSubmitFormHandler} />
-        <ImageGallery images={images} />
-        <ToastContainer />
-        {this.state.showButton && (
-          <Button onClick={this.loadMore}>Load More</Button>
-        )}
-      </div>
+      <>
+        {status === 'pending' && <Loader />}
+        {status === 'rejected' && <div>Oh, something went wrong</div>}
+        <div className={css.App}>
+          <Searchbar onSubmit={this.onSubmitFormHandler} />
+          <ImageGallery images={images} />
+          <ToastContainer />
+          {this.state.showButton && (
+            <Button onClick={this.loadMore}>Load More</Button>
+          )}
+        </div>
+      </>
     );
   }
 }
