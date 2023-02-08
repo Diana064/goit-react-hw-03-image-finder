@@ -16,10 +16,10 @@ export class App extends Component {
     status: 'idle',
     page: 1,
     pictureName: '',
-    images: null,
+    images: [],
     showModal: false,
     largeImageURL: '',
-    error: null,
+    error: '',
     showButton: false,
     totalHits: 0,
   };
@@ -27,7 +27,7 @@ export class App extends Component {
   componentDidUpdate(prevProps, prevState) {
     const { page, pictureName } = this.state;
 
-    if (pictureName !== prevState.pictureName && page > prevState.page) {
+    if (pictureName !== prevState.pictureName || page > prevState.page) {
       this.setState({ page: 1, status: 'pending', images: [] });
       this.getImages(page, pictureName);
       return;
