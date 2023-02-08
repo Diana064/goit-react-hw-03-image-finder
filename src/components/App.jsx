@@ -26,7 +26,7 @@ export class App extends Component {
     const { page, pictureName } = this.state;
 
     if (pictureName !== prevState.pictureName || page > prevState.page) {
-      this.setState({ status: 'pending' });
+      this.setState({ status: 'pending', images: [] });
       this.getImages(page, pictureName);
       return;
     }
