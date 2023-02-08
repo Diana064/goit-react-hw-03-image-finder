@@ -26,8 +26,8 @@ export class App extends Component {
     const { page, pictureName } = this.state;
 
     if (pictureName !== prevState.pictureName || page > prevState.page) {
-      this.setState({ status: 'pending', images: [] });
       this.getImages(page, pictureName);
+      this.setState({ status: 'pending' });
       return;
     }
   }
@@ -58,6 +58,7 @@ export class App extends Component {
   onSubmitFormHandler = pictureName => {
     if (pictureName) {
       this.setState({ pictureName });
+      this.setState({ status: 'idle', images: [], page: 1 });
     }
   };
 
@@ -68,7 +69,7 @@ export class App extends Component {
   };
 
   render() {
-    const { images, status, error } = this.state;
+    const { images, status } = this.state;
     if (status === 'pending') {
       return <Loader />;
     }
